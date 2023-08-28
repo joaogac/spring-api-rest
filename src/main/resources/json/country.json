@@ -1,0 +1,22 @@
+[
+  {
+    "name": "USA",
+    "ddi": 1
+  },
+  {
+    "name": "Canada",
+    "ddi": 1
+  },
+  {
+    "name": "Mexico",
+    "ddi": 52
+  },
+  {
+    "name": "Brazil",
+    "ddi": 55
+  },
+  {
+    "name": "Argentina",
+    "ddi": 54
+  }
+]
