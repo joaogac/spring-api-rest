@@ -1,5 +1,9 @@
 # https://www.docker.com/blog/9-tips-for-containerizing-your-spring-boot-code/
 # docker build -t spring-api-rest .
+# docker images
+# docker ps
+# docker kill
+# docker run -it --rm -p 8080:8080 --name spring spring-api-rest
 FROM amazoncorretto:17-alpine-jdk as builder
 WORKDIR /opt/app
 COPY .mvn/ .mvn
