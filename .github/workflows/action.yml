@@ -43,9 +43,9 @@ jobs:
       # Runs the remote QC against those files
       - name: Run remote quick command for each changed file
         env:
-            CLIENT_ID: ${{ secrets.STK_AI_CLIENT_ID }}
-            CLIENT_KEY: ${{ secrets.STK_AI_CLIENT_SECRET }}
-            CLIENT_REALM: ${{ secrets.STK_AI_CLIENT_REALM }}
+            STK_AI_CLIENT_ID: ${{ secrets.STK_AI_CLIENT_ID }}
+            STK_AI_CLIENT_SECRET: ${{ secrets.STK_AI_CLIENT_SECRET }}
+            STK_AI_CLIENT_REALM: ${{ secrets.STK_AI_CLIENT_REALM }}
             QC_SLUG: ${{ vars.QC_SLUG }}
             ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
