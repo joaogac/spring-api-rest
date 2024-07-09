@@ -19,14 +19,14 @@ jobs:
       # Setup python 3.12 in github runner
       - name: Set up Python
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
+#        with:
+#          python-version: '3.11.9'
+#          cache: 'pip'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r .github/workflows/requirements.txt
+#      - name: Install dependencies
+#        run: |
+#          python3 -m pip install --upgrade pip
+#          pip install -r .github/workflows/requirements.txt
 
       # Check all changed files
       - name: Get changed files
@@ -44,5 +44,5 @@ jobs:
         run: |
             for file in ${ALL_CHANGED_FILES}; do
               echo "$file was changed"
-              python3.11 .github/workflows/rqc.py
+              python3 .github/workflows/rqc.py
             done
