@@ -50,5 +50,5 @@ jobs:
         run: |
             for file in ${ALL_CHANGED_FILES}; do
               echo "$file was changed"
-              python3 .github/workflows/rqc.py
+              python3 .github/workflows/rqc.py $file
             done

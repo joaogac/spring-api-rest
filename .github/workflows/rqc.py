@@ -2,6 +2,8 @@ import os
 import requests
 import json
 import time
+import sys
+
 def main():
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
@@ -9,11 +11,16 @@ def main():
     ACCOUNT_SLUG = os.getenv("STK_AI_CLIENT_REALM")
     QC_SLUG = os.getenv("QC_SLUG")
     # INPUT_DATA = os.getenv("INPUT_DATA")
-    INPUT_DATA = """
-        {
-            "input_data": "public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }"
-        }
-    """
+    # INPUT_DATA = """
+    #     public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }
+    # """
+
+    INPUT_DATA = ""
+    with open(sys.argv[1], 'r') as file:
+        # Read the content of the file
+        INPUT_DATA = file.read()
+
+    print(INPUT_DATA)
 
     # Execute the steps
     access_token = get_access_token(ACCOUNT_SLUG, CLIENT_ID, CLIENT_KEY)
