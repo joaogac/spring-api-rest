@@ -37,6 +37,7 @@ def main():
 
 def get_access_token(account_slug, client_id, client_key):
     url = f"https://idm.stackspot.com/{account_slug}/oidc/oauth/token"
+    print(url);
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     data = {
         'client_id': client_id,
@@ -45,6 +46,7 @@ def get_access_token(account_slug, client_id, client_key):
     }
     response = requests.post(url, headers=headers, data=data)
     response_data = response.json()
+    print(response_data);
     return response_data['access_token']
 
 def create_rqc_execution(qc_slug, access_token, input_data):
