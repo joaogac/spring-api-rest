@@ -5,15 +5,15 @@ import time
 def main():
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
-    print(CLIENT_ID)
+    print(f"CLIENT_ID -> {CLIENT_ID}")
     CLIENT_KEY = os.getenv("STK_AI_CLIENT_SECRET")
-    print(CLIENT_KEY)
+    print(f"CLIENT_KEY -> {CLIENT_KEY}")
     ACCOUNT_SLUG = os.getenv("STK_AI_CLIENT_REALM")
-    print(ACCOUNT_SLUG)
+    print(f"ACCOUNT_SLUG -> {ACCOUNT_SLUG}")
     QC_SLUG = os.getenv("QC_SLUG")
-    print(QC_SLUG)
+    print(f"QC_SLUG -> {QC_SLUG}")
     INPUT_DATA = os.getenv("INPUT_DATA")
-    print(INPUT_DATA)
+    print(f"INPUT_DATA -> {INPUT_DATA}")
     # INPUT_DATA = """
     #     {
     #         "input_data": "public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }"
