@@ -12,8 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Environment
-    concurrency: Environment
+    environment: production
+    concurrency: production
     steps:
       # Fetch all history for all tags and branches
       - name: Checkout repository
