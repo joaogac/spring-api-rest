@@ -45,7 +45,7 @@ jobs:
             CLIENT_ID: ${{ secrets.STK_AI_CLIENT_ID }}
             CLIENT_KEY: ${{ secrets.STK_AI_CLIENT_SECRET }}
             CLIENT_REALM: ${{ secrets.STK_AI_CLIENT_REALM }}
-            QC_SLUG: ${{ inputs.QC_SLUG }}
+            QC_SLUG: ${{ vars.QC_SLUG }}
             ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
             for file in ${ALL_CHANGED_FILES}; do
