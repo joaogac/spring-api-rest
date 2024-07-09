@@ -5,20 +5,15 @@ import time
 def main():
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
-    print(f"CLIENT_ID -> {CLIENT_ID}")
     CLIENT_KEY = os.getenv("STK_AI_CLIENT_SECRET")
-    print(f"CLIENT_KEY -> {CLIENT_KEY}")
     ACCOUNT_SLUG = os.getenv("STK_AI_CLIENT_REALM")
-    print(f"ACCOUNT_SLUG -> {ACCOUNT_SLUG}")
     QC_SLUG = os.getenv("QC_SLUG")
-    print(f"QC_SLUG -> {QC_SLUG}")
-    INPUT_DATA = os.getenv("INPUT_DATA")
-    print(f"INPUT_DATA -> {INPUT_DATA}")
-    # INPUT_DATA = """
-    #     {
-    #         "input_data": "public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }"
-    #     }
-    # """
+    # INPUT_DATA = os.getenv("INPUT_DATA")
+    INPUT_DATA = """
+        {
+            "input_data": "public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }"
+        }
+    """
 
     # Execute the steps
     access_token = get_access_token(ACCOUNT_SLUG, CLIENT_ID, CLIENT_KEY)
@@ -51,7 +46,6 @@ def get_access_token(account_slug, client_id, client_key):
     }
     response = requests.post(url, headers=headers, data=data)
     response_data = response.json()
-    print(response_data);
     return response_data['access_token']
 
 def create_rqc_execution(qc_slug, access_token, input_data):
