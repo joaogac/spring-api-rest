@@ -1,6 +1,9 @@
 name: Pull Request Workflow
 
 on:
+  push:
+    branches:
+      - 'feature/*'
   pull_request:
     branches:
       - main
@@ -19,14 +22,15 @@ jobs:
       # Setup python 3.12 in github runner
       - name: Set up Python
         uses: actions/setup-python@v5
-#        with:
+        with:
+          check-latest: true
 #          python-version: '3.11.9'
 #          cache: 'pip'
 
-#      - name: Install dependencies
-#        run: |
-#          python3 -m pip install --upgrade pip
-#          pip install -r .github/workflows/requirements.txt
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r .github/workflows/requirements.txt
 
       # Check all changed files
       - name: Get changed files
