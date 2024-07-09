@@ -30,18 +30,18 @@ jobs:
 
       # Check all changed files
       - name: Get changed files
-          id: changed-files
-          uses: tj-actions/changed-files@v44
+        id: changed-files
+        uses: tj-actions/changed-files@v44
 
       # Runs the remote QC against those files
       - name: Run remote quick command for each changed file
-          env:
+        env:
             CLIENT_ID: ${{ secrets.STK_AI_CLIENT_ID }}
             CLIENT_KEY: ${{ secrets.STK_AI_CLIENT_SECRET }}
             CLIENT_REALM: ${{ secrets.STK_AI_CLIENT_REALM }}
             QC_SLUG: ${{ inputs.QC_SLUG }}
             ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-          run: |
+        run: |
             for file in ${ALL_CHANGED_FILES}; do
               echo "$file was changed"
               python3.11 .github/workflows/rqc.py
