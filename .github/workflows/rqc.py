@@ -82,6 +82,8 @@ def create_rqc_execution(qc_slug, access_token, commit_id, path, file_content):
             'content': f'{file_content}'
         }
     }
+
+    print(data)
     response = requests.post(
         url,
         headers=headers,
