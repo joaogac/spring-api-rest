@@ -14,17 +14,17 @@ def main(filename):
     CLIENT_KEY = os.getenv("STK_AI_CLIENT_SECRET")
     ACCOUNT_SLUG = os.getenv("STK_AI_CLIENT_REALM")
     QC_SLUG = os.getenv("QC_SLUG")
-    # INPUT_DATA = os.getenv("INPUT_DATA")
     # INPUT_DATA = """
     #     public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }
     # """
 
-    INPUT_DATA = read_file_content(filename)
+    commit_id = os.getenv("GITHUB_SHA")
+    content = read_file_content(filename)
 
 
     # Execute the steps
     access_token = get_access_token(ACCOUNT_SLUG, CLIENT_ID, CLIENT_KEY)
-    execution_id = create_rqc_execution(QC_SLUG, access_token, INPUT_DATA)
+    execution_id = create_rqc_execution(QC_SLUG, access_token, commit_id, path=filename, file_content=content)
 
     execution_status = {
         "status": "OK",
@@ -68,14 +68,19 @@ def get_access_token(account_slug, client_id, client_key):
     response_data = response.json()
     return response_data['access_token']
 
-def create_rqc_execution(qc_slug, access_token, input_data):
+
+def create_rqc_execution(qc_slug, access_token, commit_id, path, file_content):
     url = f"https://genai-code-buddy-api.stackspot.com/v1/quick-commands/create-execution/{qc_slug}"
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {access_token}'
     }
     data = {
-        'input_data': input_data
+        'input_data': {
+            'commit_id': f'{commit_id}',
+            'path': f'{path}',
+            'content': f'{file_content}'
+        }
     }
     response = requests.post(
         url,

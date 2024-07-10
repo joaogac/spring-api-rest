@@ -1,13 +1,13 @@
 name: Pull Request Workflow
 
 on:
-  push:
-    branches:
-      - 'feature/*'
-#  pull_request:
+#  push:
 #    branches:
-#      - main
-#    types: [opened, synchronize, reopened]
+#      - 'feature/*'
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -25,9 +25,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          check-latest: true
-#          python-version: '3.11.9'
-#          cache: 'pip'
+#          check-latest: true
+          python-version: '3.11.0'
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
