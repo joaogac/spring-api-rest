@@ -120,5 +120,5 @@ if __name__ == "__main__":
         print("ERROR: You must pass at least one filename as argument to invoke this script!")
         sys.exit(1)
     else:
-        result = main()
+        result = main(sys.argv[1])
         print(result)
