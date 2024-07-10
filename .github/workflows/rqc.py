@@ -3,8 +3,12 @@ import requests
 import json
 import time
 import sys
+import logging
 
-def main():
+# Configure logging
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def main(filename):
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
     CLIENT_KEY = os.getenv("STK_AI_CLIENT_SECRET")
@@ -15,12 +19,8 @@ def main():
     #     public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }
     # """
 
-    INPUT_DATA = ""
-    with open(sys.argv[1], 'r') as file:
-        # Read the content of the file
-        INPUT_DATA = file.read()
+    INPUT_DATA = read_file_content(filename)
 
-    print(INPUT_DATA)
 
     # Execute the steps
     access_token = get_access_token(ACCOUNT_SLUG, CLIENT_ID, CLIENT_KEY)
@@ -40,6 +40,19 @@ def main():
 
     result_data = json.loads(result)
     return json.dumps(result_data, indent=4)
+
+
+def read_file_content(filename):
+    content = ""
+    try:
+        with open(filename, 'r') as file:
+            # Read the content of the file
+            content = file.read()
+    except FileNotFoundError as e:
+        logging.error(f"FileNotFoundError when trying to read file {filename}: {e}")
+    except IOError as e:
+        logging.error(f"IOError when trying to read file {filename}: {e}")
+    return content
 
 
 def get_access_token(account_slug, client_id, client_key):
@@ -103,5 +116,9 @@ def get_execution_status(execution_id, access_token):
 
 
 if __name__ == "__main__":
-    result = main()
-    print(result)
+    if len(sys.argv) < 1:
+        print("ERROR: You must pass at least one filename as argument to invoke this script!")
+        sys.exit(1)
+    else:
+        result = main()
+        print(result)
