@@ -49,6 +49,7 @@ jobs:
             QC_SLUG: ${{ vars.QC_SLUG }}
             ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
+            echo "${ALL_CHANGED_FILES}"
             for file in ${ALL_CHANGED_FILES}; do
               echo "$file was changed"
               python3.11 .github/workflows/rqc.py $file
