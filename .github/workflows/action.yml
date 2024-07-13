@@ -1,6 +1,9 @@
 name: Pull Request Workflow
 
 on:
+#  push:
+#    branches:
+#      - 'feature/*'
   pull_request:
     branches:
       - main
@@ -9,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
+    concurrency: production
     steps:
       # Fetch all history for all tags and branches
       - name: Checkout repository
@@ -19,14 +24,16 @@ jobs:
       # Setup python 3.12 in github runner
       - name: Set up Python
         uses: actions/setup-python@v5
-#        with:
-#          python-version: '3.11.9'
-#          cache: 'pip'
+        with:
+#          check-latest: true
+          python-version: '3.11.0'
+          cache: 'pip'
 
-#      - name: Install dependencies
-#        run: |
-#          python3 -m pip install --upgrade pip
-#          pip install -r .github/workflows/requirements.txt
+      - name: Install dependencies
+        run: |
+          python3.11 -m pip install --upgrade pip
+          python3.11 -m pip install requests
+          pip3 install -r .github/workflows/requirements.txt
 
       # Check all changed files
       - name: Get changed files
@@ -36,13 +43,14 @@ jobs:
       # Runs the remote QC against those files
       - name: Run remote quick command for each changed file
         env:
-            CLIENT_ID: ${{ secrets.STK_AI_CLIENT_ID }}
-            CLIENT_KEY: ${{ secrets.STK_AI_CLIENT_SECRET }}
-            CLIENT_REALM: ${{ secrets.STK_AI_CLIENT_REALM }}
-            QC_SLUG: ${{ inputs.QC_SLUG }}
+            STK_AI_CLIENT_ID: ${{ secrets.STK_AI_CLIENT_ID }}
+            STK_AI_CLIENT_SECRET: ${{ secrets.STK_AI_CLIENT_SECRET }}
+            STK_AI_CLIENT_REALM: ${{ secrets.STK_AI_CLIENT_REALM }}
+            QC_SLUG: ${{ vars.QC_SLUG }}
             ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
+            echo "${ALL_CHANGED_FILES}"
             for file in ${ALL_CHANGED_FILES}; do
               echo "$file was changed"
-              python3 .github/workflows/rqc.py
+              python3.11 .github/workflows/rqc.py $file
             done

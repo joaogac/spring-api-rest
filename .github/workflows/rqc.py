@@ -2,22 +2,35 @@ import os
 import requests
 import json
 import time
-def main():
+import sys
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+_IGNORED_RESOURCES = [ ".github", ".idea", ".mvn" ]
+
+def main(filename):
+    if is_invalid_resource(filename):
+        logging.warning(f"Ignoring resource: '{filename}'")
+        return 'False'
+
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
     CLIENT_KEY = os.getenv("STK_AI_CLIENT_SECRET")
     ACCOUNT_SLUG = os.getenv("STK_AI_CLIENT_REALM")
     QC_SLUG = os.getenv("QC_SLUG")
-    INPUT_DATA = os.getenv("INPUT_DATA")
     # INPUT_DATA = """
-    #     {
-    #         "input_data": "public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }"
-    #     }
+    #     public class DiscountCalculator { public double calculateDiscount(String customerType, double purchaseAmount) { double discount = 0.0; if (customerType.equals(\"Regular\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.05; } else { discount = purchaseAmount * 0.02; } } else if (customerType.equals(\"Premium\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.10; } else { discount = purchaseAmount * 0.07; } } else if (customerType.equals(\"VIP\")) { if (purchaseAmount > 1000) { discount = purchaseAmount * 0.15; } else { discount = purchaseAmount * 0.12; } } else { discount = 0.0; } return discount; } }
     # """
+
+    commit_id = os.getenv("GITHUB_SHA")
+    content = read_file_content(filename)
+
 
     # Execute the steps
     access_token = get_access_token(ACCOUNT_SLUG, CLIENT_ID, CLIENT_KEY)
-    execution_id = create_rqc_execution(QC_SLUG, access_token, INPUT_DATA)
+    execution_id = create_rqc_execution(QC_SLUG, access_token, commit_id, path=filename, file_content=content)
 
     execution_status = {
         "status": "OK",
@@ -34,9 +47,25 @@ def main():
     result_data = json.loads(result)
     return json.dumps(result_data, indent=4)
 
+def is_invalid_resource(filename):
+    return list( filter(filename.startswith, _IGNORED_RESOURCES) ) != []
+
+def read_file_content(filename):
+    content = ""
+    try:
+        with open(filename, 'r') as file:
+            # Read the content of the file
+            content = file.read()
+    except FileNotFoundError as e:
+        logging.error(f"FileNotFoundError when trying to read file {filename}: {e}")
+    except IOError as e:
+        logging.error(f"IOError when trying to read file {filename}: {e}")
+    return content
+
 
 def get_access_token(account_slug, client_id, client_key):
     url = f"https://idm.stackspot.com/{account_slug}/oidc/oauth/token"
+    print(url);
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     data = {
         'client_id': client_id,
@@ -47,15 +76,22 @@ def get_access_token(account_slug, client_id, client_key):
     response_data = response.json()
     return response_data['access_token']
 
-def create_rqc_execution(qc_slug, access_token, input_data):
+
+def create_rqc_execution(qc_slug, access_token, commit_id, path, file_content):
     url = f"https://genai-code-buddy-api.stackspot.com/v1/quick-commands/create-execution/{qc_slug}"
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {access_token}'
     }
     data = {
-        'input_data': input_data
+        'input_data': {
+            'commit_id': f'{commit_id}',
+            'path': f'{path}',
+            'content': f'{file_content}'
+        }
     }
+
+    print(data)
     response = requests.post(
         url,
         headers=headers,
@@ -95,5 +131,9 @@ def get_execution_status(execution_id, access_token):
 
 
 if __name__ == "__main__":
-    result = main()
-    print(result)
+    if len(sys.argv) < 1:
+        print("ERROR: You must pass at least one filename as argument to invoke this script!")
+        sys.exit(1)
+    else:
+        result = main(sys.argv[1])
+        print(result)

@@ -28,4 +28,8 @@ public class CountryService {
                 .collect( Collectors.toList() );
     }
 
+    public CountryDTO getCountryByName(String name) {
+        return mapper.toCountryDTO(repository.findByName(name));
+    }
+
 }
