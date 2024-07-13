@@ -13,7 +13,7 @@ _IGNORED_RESOURCES = [ ".github", ".idea", ".mvn" ]
 def main(filename):
     if is_invalid_resource(filename):
         logging.warning(f"Ignoring resource: '{filename}'")
-        return false
+        sys.exit(1)
 
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
