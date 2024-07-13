@@ -35,6 +35,8 @@ public class CountryController {
         }
         else if ( "Canada".equalsIgnoreCase( name ) ) {
             ret.setName("Canadá");
+        } else {
+            // does nothing
         }
         return ret;
     }

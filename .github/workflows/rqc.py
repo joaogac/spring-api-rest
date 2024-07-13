@@ -6,9 +6,15 @@ import sys
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+_IGNORED_RESOURCES = [ ".github", ".idea", ".mvn" ]
 
 def main(filename):
+    if is_invalid_resource(filename)
+        logging.warning(f"Ignoring resource: '{filename}'")
+        return false
+
     # Replace the placeholders with your actual data
     CLIENT_ID = os.getenv("STK_AI_CLIENT_ID")
     CLIENT_KEY = os.getenv("STK_AI_CLIENT_SECRET")
@@ -41,6 +47,8 @@ def main(filename):
     result_data = json.loads(result)
     return json.dumps(result_data, indent=4)
 
+def is_invalid_resource(filename):
+    return list( filter(filename.startswith, _IGNORED_RESOURCES) ) != []
 
 def read_file_content(filename):
     content = ""
