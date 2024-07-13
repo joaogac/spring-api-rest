@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 _IGNORED_RESOURCES = [ ".github", ".idea", ".mvn" ]
 
 def main(filename):
-    if is_invalid_resource(filename)
+    if is_invalid_resource(filename):
         logging.warning(f"Ignoring resource: '{filename}'")
         return false
 
